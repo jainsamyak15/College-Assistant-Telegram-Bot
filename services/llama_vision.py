@@ -24,7 +24,7 @@ def process_text(text):
         response = client.chat.completions.create(
             model="meta-llama/Llama-Vision-Free",
             messages=[{"role": "user", "content": text}],
-            max_tokens=5000,  # Increased max_tokens for longer responses
+            max_tokens=10000,  # Increased max_tokens for longer responses
             temperature=0.7,
             top_p=0.7,
             top_k=50,
@@ -67,7 +67,7 @@ def process_image_and_text(prompt, text):
         response = client.chat.completions.create(
             model="meta-llama/Llama-Vision-Free",
             messages=[{"role": "user", "content": combined_input}],
-            max_tokens=5000,
+            max_tokens=10000,
             temperature=0.7,
             top_p=0.7,
             top_k=50,

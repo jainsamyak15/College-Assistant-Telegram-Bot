@@ -3,6 +3,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.units import inch
+from reportlab.lib import colors
 from config import UPLOAD_FOLDER
 import os
 
@@ -19,8 +20,9 @@ def generate_document(content):
     try:
         doc = SimpleDocTemplate(output_path, pagesize=letter, rightMargin=72, leftMargin=72, topMargin=72, bottomMargin=18)
 
+        # Stylesheet and custom styles
         styles = getSampleStyleSheet()
-        styles.add(ParagraphStyle(name='Question', fontSize=12, spaceAfter=6, fontName='Helvetica-Bold'))
+        styles.add(ParagraphStyle(name='Question', fontSize=16, fontName='Helvetica-Bold', textColor=colors.black, spaceAfter=6))
         styles.add(ParagraphStyle(name='QuestionInfo', fontSize=10, spaceAfter=6, fontName='Helvetica-Oblique'))
         styles.add(ParagraphStyle(name='Answer', fontSize=11, leftIndent=20, spaceAfter=12))
         styles.add(ParagraphStyle(name='Separator', fontSize=11))
@@ -29,6 +31,7 @@ def generate_document(content):
 
         for paragraph in content.split('\n'):
             if paragraph.startswith("Question"):
+                # This will make the question dark black, bold, and a larger font size
                 story.append(Paragraph(paragraph, styles['Question']))
             elif paragraph.startswith("Marks:"):
                 story.append(Paragraph(paragraph, styles['QuestionInfo']))
@@ -49,6 +52,7 @@ def generate_document(content):
     except Exception as e:
         logger.error(f"Error generating document: {str(e)}", exc_info=True)
         return None
+
     
 def generate_cover_letter(name, company, position, skills):
     """

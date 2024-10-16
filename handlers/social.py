@@ -2,6 +2,10 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from services.llama_vision import process_text, process_image_and_text
 from services.flux_schnell import process_image
 import io
+import random
+import json
+import logging
+import time
 
 def register_social_handler(bot):
     @bot.callback_query_handler(func=lambda call: call.data == "social")
