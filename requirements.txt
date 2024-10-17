@@ -290,6 +290,8 @@ passlib==1.7.4
 pathlib @ file:///Users/ktietz/demo/mc3/conda-bld/pathlib_1629713961906/work
 pathspec @ file:///Users/cbousseau/work/recipes/ci_py311_2/pathspec_1678995598596/work
 patsy==0.5.3
+pdfminer.six==20231228
+pdfplumber==0.11.4
 pexpect @ file:///tmp/build/80754af9/pexpect_1605563209008/work
 phik==0.12.4
 pickleshare @ file:///tmp/build/80754af9/pickleshare_1606932040724/work
@@ -337,6 +339,7 @@ pylint-venv @ file:///Users/cbousseau/work/recipes/ci_py311/pylint-venv_16779614
 pyls-spyder==0.4.0
 pymongo==4.8.0
 PyMsgBox==1.0.9
+PyMuPDF==1.24.11
 pyobjc-core==10.2
 pyobjc-framework-Cocoa==10.2
 pyobjc-framework-CoreServices @ file:///Users/cbousseau/work/recipes/ci_py311/pyobjc-framework-coreservices_1678113537167/work
