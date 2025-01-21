@@ -9,8 +9,8 @@ def register_start_handler(bot):
         markup.add(
             InlineKeyboardButton("Study Assistant", callback_data="study"),
             InlineKeyboardButton("Career Guide", callback_data="career"),
-            InlineKeyboardButton("Campus Life", callback_data="campus"),
-            InlineKeyboardButton("Social Connect", callback_data="social"),
+            # InlineKeyboardButton("Campus Life", callback_data="campus"),
+            # InlineKeyboardButton("Social Connect", callback_data="social"),
             InlineKeyboardButton("Assignment Solver", callback_data="assignment_solver")
         )
         bot.reply_to(message, "Welcome to College Companion! How can I assist you today?", reply_markup=markup)

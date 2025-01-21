@@ -25,3 +25,5 @@ if not TELEGRAM_BOT_TOKEN:
 
 if not TOGETHER_API_KEY:
     raise ValueError("TOGETHER_API_KEY is not set in the environment variables")
+
+GOOGLE_SHEETS_CREDENTIALS = '/Users/samyakjain/All Codes/college_assistant_bot/credentials.json'

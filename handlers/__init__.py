@@ -10,5 +10,5 @@ def register_handlers(bot):
     register_assignment_solver_handler(bot)  # Register this before study handler
     register_study_handler(bot)
     register_career_handler(bot)
-    register_campus_handler(bot)
-    register_social_handler(bot)
+    # register_campus_handler(bot)
+    # register_social_handler(bot)
