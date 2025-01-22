@@ -6,6 +6,7 @@ from services.document_generator import generate_cover_letter
 from telebot.apihelper import ApiTelegramException
 from utils.google_sheets_logger import GoogleSheetsLogger
 import json
+from random import choice
 import io
 import PyPDF2
 import re
@@ -27,6 +28,69 @@ except Exception as e:
     logger.error(f"Failed to initialize Google Sheets logger: {str(e)}")
     sheets_logger = None
 
+
+def generate_cold_email(name, year, college, branch, skills, company, recipient_name, position, projects, resume_link,
+                        github_link, custom_note=""):
+    """
+    Generate a personalized cold email with randomized sections for variety.
+    """
+    # Randomized components
+    opening_lines = [
+        f"I hope you are doing well. My name is {name}, a {year} student at {college}, specializing in {branch}.",
+        f"I’m {name}, currently in my {year} at {college}, pursuing {branch}.",
+        f"My name is {name}, and I’m a {year} student at {college}, majoring in {branch}."
+    ]
+
+    skills_lines = [
+        f"I have experience in {skills} and have worked on several projects to apply these skills in real-world scenarios.",
+        f"My expertise includes {skills}, which I have honed through academic projects and freelance work.",
+        f"I bring strong skills in {skills}, gained through coursework, hackathons, and personal projects."
+    ]
+
+    position_lines = [
+        f"I recently came across the {position} role at {company}, and I’m eager to apply.",
+        f"The {position} opportunity at {company} caught my attention, and I believe I’m a great fit for the role.",
+        f"I’m excited about the {position} role at {company} and would love the opportunity to contribute to your team."
+    ]
+
+    projects_lines = [
+        "Here are a couple of my recent projects:",
+        "I’ve highlighted a few of my projects below:",
+        "Here are some examples of my work:"
+    ]
+
+    closing_lines = [
+        "I’d be delighted to contribute to your team. Please let me know if there’s anything else you’d like me to share.",
+        "I look forward to discussing how I can contribute to your team’s success.",
+        "Please feel free to reach out if you’d like more details about my background or projects."
+    ]
+
+    # Assemble the email
+    email_parts = [
+        f"Hi {recipient_name},\n\n",
+        f"{choice(opening_lines)}\n\n",
+        f"{choice(skills_lines)}\n\n",
+        f"{choice(position_lines)}\n\n"
+    ]
+
+    # Add projects section
+    if projects:
+        email_parts.append(f"{choice(projects_lines)}\n\n")
+        for project in projects.split(','):
+            email_parts.append(f"- {project.strip()} : Demo Link\n")
+        email_parts.append("\n")
+
+    # Add resume and GitHub links
+    if resume_link:
+        email_parts.append(f"Here’s my resume: {resume_link}\n\n")
+    if github_link:
+        email_parts.append(f"GitHub Profile: {github_link}\n\n")
+
+    # Add closing
+    email_parts.append(f"{choice(closing_lines)}\n\n")
+    email_parts.append(f"Best regards,\n{name}\n")
+
+    return "".join(email_parts)
 
 def register_career_handler(bot):
     @bot.callback_query_handler(func=lambda call: call.data == "career")
@@ -72,6 +136,7 @@ def register_career_handler(bot):
             InlineKeyboardButton("Career Path", callback_data="career_path"),
             InlineKeyboardButton("Salary Negotiation", callback_data="salary_negotiation"),
             InlineKeyboardButton("Cover Letter Generator", callback_data="cover_letter_generator"),
+            InlineKeyboardButton("Cold Email Generator", callback_data="cold_email_generator"),  # Added this line
             InlineKeyboardButton("Industry Insights", callback_data="industry_insights"),
             InlineKeyboardButton("Mock Interview", callback_data="mock_interview")
         )
@@ -81,7 +146,7 @@ def register_career_handler(bot):
     @bot.callback_query_handler(
         func=lambda call: call.data in ["resume_review", "job_search", "interview_tips", "career_path",
                                         "salary_negotiation", "cover_letter_generator", "industry_insights",
-                                        "mock_interview"])
+                                        "mock_interview","cold_email_generator"])
     def career_option_callback(call):
         try:
             response = ""
@@ -110,6 +175,25 @@ def register_career_handler(bot):
                 response = "*Please provide the following information for your cover letter:*\n1. Your name\n2. The company name\n3. The position you're applying for\n4. Your top 3 skills\n\nSeparate each piece of information with a comma."
                 bot.send_message(call.message.chat.id, response, parse_mode="Markdown")
                 bot.register_next_step_handler(call.message, generate_cover_letter_handler)
+            elif call.data == "cold_email_generator":
+                bot.answer_callback_query(call.id, "Opening Cold Email Generator...")
+                response = ("*Please provide the following information for your cold email:*\n\n"
+                            "1. Your name\n"
+                            "2. Your academic year (e.g., third year, fourth year)\n"
+                            "3. Your college name\n"
+                            "4. Your branch (e.g., AI and Data Science)\n"
+                            "5. Your skills (comma-separated)\n"
+                            "6. Company name\n"
+                            "7. Recipient's name\n"
+                            "8. Position you're interested in\n"
+                            "9. Projects (comma-separated list of project names with demo links)\n"
+                            "10. Resume link\n"
+                            "11. GitHub link\n\n"
+                            "Separate each piece of information with a comma.")
+
+                bot.send_message(call.message.chat.id, response, parse_mode="Markdown")
+                bot.register_next_step_handler(call.message, generate_cold_email_handler)
+
             elif call.data == "industry_insights":
                 bot.answer_callback_query(call.id, "Fetching Industry Insights...")
                 markup = InlineKeyboardMarkup()
@@ -137,6 +221,68 @@ def register_career_handler(bot):
         except Exception as e:
             logger.error(f"Error in career option callback: {str(e)}")
             bot.reply_to(call.message, "An error occurred while processing your request. Please try again.")
+
+    def generate_cold_email_handler(message):
+        try:
+            # Split the input and handle optional fields
+            parts = [part.strip() for part in message.text.split(',')]
+
+            # Ensure all required fields are provided
+            if len(parts) < 11:
+                bot.reply_to(message,
+                             "Please provide all required details: name, year, college, branch, skills, company, recipient's name, position, projects, resume link, and GitHub link.")
+                return
+
+            # Extract fields
+            name = parts[0]
+            year = parts[1]
+            college = parts[2]
+            branch = parts[3]
+            skills = parts[4]
+            company = parts[5]
+            recipient_name = parts[6]
+            position = parts[7]
+            projects = parts[8]
+            resume_link = parts[9]
+            github_link = parts[10]
+            custom_note = parts[11] if len(parts) > 11 else ""
+
+            # Generate the email
+            cold_email = generate_cold_email(
+                name=name,
+                year=year,
+                college=college,
+                branch=branch,
+                skills=skills,
+                company=company,
+                recipient_name=recipient_name,
+                position=position,
+                projects=projects,
+                resume_link=resume_link,
+                github_link=github_link,
+                custom_note=custom_note
+            )
+
+            response = f"*Here's your personalized cold email:*\n\n{cold_email}"
+            bot.send_message(message.chat.id, response, parse_mode="Markdown")
+
+            # Add copy button for convenience
+            markup = InlineKeyboardMarkup()
+            markup.add(InlineKeyboardButton("Generate Another Email", callback_data="cold_email_generator"))
+            bot.send_message(message.chat.id, "Would you like to generate another cold email?", reply_markup=markup)
+
+            if sheets_logger:
+                sheets_logger.log_interaction(
+                    user_id=message.from_user.id,
+                    username=message.from_user.username,
+                    query_type="cold_email_generated",
+                    user_query=f"Generated cold email for {company}",
+                    ai_response=response
+                )
+
+        except Exception as e:
+            logger.error(f"Error generating cold email: {str(e)}")
+            bot.reply_to(message, "An error occurred while generating your cold email. Please try again.")
 
     @bot.callback_query_handler(func=lambda call: call.data.startswith("insight_"))
     def industry_insight_callback(call):
