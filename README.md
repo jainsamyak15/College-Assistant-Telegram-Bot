@@ -6,8 +6,6 @@ The **College Assistant Telegram Bot** is a versatile tool designed to assist co
 - [Features](#features)
   - [Assignment Solver](#assignment-solver)
   - [Career Guide](#career-guide)
-  - [Campus Life](#campus-life)
-  - [Social Connect](#social-connect)
   - [Study Assistant](#study-assistant)
 - [Technology Stack](#technology-stack)
 - [Installation](#installation)
@@ -16,8 +14,6 @@ The **College Assistant Telegram Bot** is a versatile tool designed to assist co
 - [Usage](#usage)
 - [Configuration](#configuration)
 - [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 
