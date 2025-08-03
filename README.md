@@ -35,15 +35,6 @@ The **College Assistant Telegram Bot** is a versatile tool designed to assist co
 - **Industry Insights:** Get insights on the current job market across different industries.
 - **Mock Interviews:** Practice answering difficult interview questions and get feedback.
 
-### Campus Life
-- **Lost and Found:** Submit or search for lost and found items on campus.
-- **Event Information:** Receive details about upcoming campus events and activities.
-
-### Social Connect
-- **Peer Mentorship Program:** Connect with mentors or mentees based on your field of study and interests.
-- **Study Groups:** Find and join study groups for various subjects and courses.
-- **Social Groups:** Join social groups to connect with peers who share similar interests.
-
 ### Study Assistant
 - **Study Tips:** Get tips and resources to improve your study habits and performance.
 - **Resource Recommendations:** Receive recommendations for books, articles, and other study materials relevant to your subjects.
